@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "CustomerAPI",
   "main": "app.js",
+  "author": "Engina Khadka",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +11,6 @@
     "type": "git",
     "url": "git+https://github.com/Engi111/CustomerAPI.git"
   },
-  "author": "Engina Khadka",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Engi111/CustomerAPI/issues"
