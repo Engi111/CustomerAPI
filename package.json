@@ -1,19 +1,17 @@
-{
-  "name": "customerapi",
-  "version": "1.0.0",
-  "description": "CustomerAPI",
-  "main": "app.js",
-  "author": "Engina Khadka",
+
+  "name": "fcc-learn-npm-package-json",
+  "author": "foobar",
+  "dependencies": {
+    "express": "^4.14.0"
+  },
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "8.11.2"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Engi111/CustomerAPI.git"
-  },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Engi111/CustomerAPI/issues"
-  },
-  "homepage": "https://github.com/Engi111/CustomerAPI#readme"
-}
+    "url": "https://idontknow/todo.git"
+  }
