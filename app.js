@@ -1,19 +1,32 @@
-/*{
-    "name": "customerapi",
-    "version": "1.0.0",
-    "description": "CustomerAPI",
-    "main": "app.js",
-    "author": "Engina Khadka",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Engi111/CustomerAPI.git"
-    },
-    "license": "ISC",
-    "bugs": {
-      "url": "https://github.com/Engi111/CustomerAPI/issues"
-    },
-    "homepage": "https://github.com/Engi111/CustomerAPI#readme"
-  }*/
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+//requiring is used to return the function reference
+// const express = require ('express');
+// const app = express();
+
+// //listen method is used for server to connect with browser
+// // app.listen(3000,() => { //port 3000 for connections
+// //     console.log("This is for customer API");
+// // })
+// app.listen(3000, () => {
+//     console.log("xyz");
+// })
+// // app.get('/', (req, res) => {
+// //     res.send("This is for Customer API");
+// // })
+// //within callback, res and req arguments are used (CRUD-R-GET)
+// // app.get('/', ( req, res) => {
+// // res.sendFile(__dirname + '/index.html'); //_dir -> current directory we're in
+// // })
+// app.post("/", (req, res) => {
+// },
