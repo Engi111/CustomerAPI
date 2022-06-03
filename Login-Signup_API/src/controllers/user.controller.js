@@ -1,53 +1,69 @@
-const userServices =  require('../services/user.services')
-const User = require("../models/user.model");
-const req = require("express/lib/request");
-const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_APIKEY);
 const jsonwebtoken = require("jsonwebtoken");
+const bcrypt = require('bcrypt')
+const Token  = require("../models/token");
+const {User} = require("../models/user.model");
+const sendMail = require('../utils/sendEmail');
 
 
 
-// register
-exports.createUser = async (req, res, next) => {
-    const user = await User.create(req.body)
-    const {name, email, password} = req.body
-    const token = jsonwebtoken.sign({name,email},process.env.SECRET,{expiresIn: "1hr"});
-    //sending mail
-    const msg = {
-        from: "khadkaengina111@gmail.com",
-        to: email,
-        subject: "Hello this is a mail for you",
-
-        html:`
+//to register
+exports.createUser = async(req,res, next) => {
+    try {
+     const {name, email, password} = req.body;
+     //to validate user input
+ 
+     if (!(email && password && name)) {
+         res.status(400).send("Input Required");
+     }
+     // to check if user already exists through db
+ 
+     const oldUser = await User.findOne({email});
+ 
+     if (oldUser) {
+         return res.status(409).send("User already exist. Please login");
+     }
+ 
+     // //to create token
+     const token = jsonwebtoken.sign({name,email},process.env.SECRET,{expiresIn: "1hr"});
+     
+     //To encrypt user's password
+      encryptedPassword = await bcrypt.hash(password,10);
+     
+     //To create user in the database
+      const user = await User.create({
+         name,
+         email: email.toLowerCase(), //samitizing with lower case
+         password: encryptedPassword,
+     });
+     
+      await Token.create({
+         userId: user.id,
+         token,
+     })
+     
+     let messageOptions = {
+         to: email,
+        subject: "Verify your account",
+        content: `
         <h2>Please click the following link to activate your account</h2>
-        <p>${process.env.BASE_URL}/authentication/activate/${token}</p>
+        <p>${process.env.BASE_URL}/auth/activate/${token}</p>
         `
     }
-
-    sgMail
-        .send(msg)
-        .then(() => {
-            console.log("Email Sent")
-        })
-        .catch((error) =>{
-            console.log(error)
-        }) 
     
-    //to find existing user in db
-    const oldUser = await User.findOne({email});
+    // send mail
+     let value = await sendMail(messageOptions);
+     if (value?.error) throw new Error (value.error)
 
-    if (oldUser) {
-        return res.status(409).send("User already exist. Please login");
-    }
-    //To encrypt user's password
-
-    encryptedPassword = await bcrypt.hash(password, genSalt(10));
-
-    res.status(201).json({
-        sucess: true, data: user, msg:"show users"
-    })
-}
-
+     res.status(201).json({
+         data: user,
+         verificationUrl: `${process.env.BASE_URL}/auth/activate/${token}`
+         
+     });
+ 
+    } catch (err) {
+     console.log(err);   
+    }     
+ };
 
 
 //to get details of registered user

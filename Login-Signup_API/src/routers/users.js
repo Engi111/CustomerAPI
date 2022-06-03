@@ -1,8 +1,9 @@
 const express = require("express");
+const auth = require("../middleware/authJwt");
 const {
     getUser, getUsers, createUser, updateUser, deleteUser
     } = require("../controllers/user.controller");
-const {register} = require("../controllers/auth");
+const {register, change_password} = require("../controllers/auth");
     
 const router = express.Router();
 
@@ -12,7 +13,10 @@ router
 router
     .route("/register")
     .post(createUser);
+
+router.put("/change_password",auth,change_password)
 router
+    .use(auth)
     .route("/:id")
     .get(getUser)
     .put(updateUser)
