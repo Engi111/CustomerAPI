@@ -4,6 +4,7 @@ const {
     getUser, getUsers, createUser, updateUser, deleteUser
     } = require("../controllers/user.controller");
 const {register, change_password} = require("../controllers/auth");
+const role = require("../middleware/role");
     
 const router = express.Router();
 
@@ -15,6 +16,9 @@ router
     .post(createUser);
 
 router.put("/change_password",auth,change_password)
+
+router.get("/details", auth,role("admin"),getUsers);
+
 router
     .use(auth)
     .route("/:id")

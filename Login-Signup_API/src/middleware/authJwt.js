@@ -12,12 +12,12 @@ const auth = async(req, res, next) => {
         if (!user) {
             throw new Error()
         }
-        req.user = data
+        req.user = data  
         req.token = token
         return next()
     } catch (error) {
         console.log(error)
-        res.status(401).send({error: "Not authorized to access"})
+        res.status(401).json({error: "Not authorized to access"})
     }
 };
  module.exports = auth;

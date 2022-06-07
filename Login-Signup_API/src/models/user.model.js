@@ -23,10 +23,12 @@ const userSchema = new mongoose.Schema({
         min: 8,
         max: 16,
     }, 
-    // role: {
-        //     type: String,
-        //     required: true,
-    //},     
+    role: {
+        type: String,
+        enum: ["admin", "user"],
+            required: true,
+            default: 'user',
+    },     
     uuid: {
         type: String,
         default : () => uuidv4(),
