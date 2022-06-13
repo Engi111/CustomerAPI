@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const Token  = require("../models/token");
 const {User} = require("../models/user.model");
 const sendMail = require('../utils/sendEmail');
-
+const details = require("../routers/users")
 
 
 //to register
@@ -83,13 +83,30 @@ exports.getUser = async (req, res, next) => {
 //to get details of registered users
 
 exports.getUsers = async (req, res, next) => {
+
+    //pagination
+    let {page, limit,name} = req.query;
+    page = parseInt(page)
+    limit = parseInt(limit)
     try {
-        const test= "OKAY TEST"
-        const user = await User.find();
-        res.status(200).json({sucess: true, data: user, msg: "to get the details of the registered users" });
-    } catch (error) {
-      res.status(400).json({sucess:false});  
-    }  
+        const resposedata = await User.find({name:{$regex: "Eng"}})
+        // .limit(limit * 1)
+        // .skip((page - 1) * limit)
+        // .sort({name: -1})
+        .exec();
+        return res.status(200).json({sucess: true, data: resposedata, msg: "to get the details of the registered users" });
+
+    } catch (err) {
+        console.log(err.message);
+    }
+
+    // try {
+    //     const test= "OKAY TEST"
+    //     const user = await User.find();
+    //     res.status(200).json({sucess: true, data: user, msg: "to get the details of the registered users" });
+    // } catch (error) {
+    //   res.status(400).json({sucess:false});  
+    // }  
 }
 //to update the registered users
 exports.updateUser = async (req, res, next) => {

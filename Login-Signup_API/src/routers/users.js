@@ -1,21 +1,25 @@
 const express = require("express");
 const auth = require("../middleware/authJwt");
+
 const {
     getUser, getUsers, createUser, updateUser, deleteUser
     } = require("../controllers/user.controller");
 const {register, change_password} = require("../controllers/auth");
+
 const role = require("../middleware/role");
-    
+
+const controller = require("../controllers/file.controller");
+
 const router = express.Router();
 
 router
     .route("/")
-    .get(getUsers)
+    .get(getUsers);
 router
     .route("/register")
     .post(createUser);
 
-router.put("/change_password",auth,change_password)
+router.put("/change_password",auth,change_password);
 
 router.get("/details", auth,role("admin"),getUsers);
 

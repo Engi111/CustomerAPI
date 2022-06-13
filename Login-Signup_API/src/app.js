@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt")
 const  connection = require("./config/db.config");
 const indexRouter = require("./routers/index");
 const logger = require('./middleware/logger')
+const multer  = require('multer')
+
 
 const app = express();
 
@@ -21,7 +23,17 @@ connection()
 
 app.use(logger)
 
-app.use("/", indexRouter)
+// const upload = multer({ dest: './public/data/uploads/' })
+// app.post('/stats', upload.single('uploaded_file'), function (req, res) {
+//    // req.file is the name of your file in the form above, here 'uploaded_file'
+//    // req.body will hold the text fields, if there were any 
+//    console.log(req.file, req.body)
+//    res.send("File Upload")
+// });
+
+// app.use(router);
+
+app.use("/api", indexRouter)
 
 app.use("/", (req, res,next) => {
     res.status(200).json({
