@@ -4,6 +4,9 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
+const baseURL = process.env.BASE_URL;
+
+
 
 
 // to create the new user
@@ -17,21 +20,28 @@ exports.createUser = async (db ,payload) => {
     }
     //hashed pass generate
     encryptedPassword = await bcrypt.hash(password,10);
+    //to create a token
+    const token = jsonwebtoken.sign({email},process.env.SECRET/*,{expiresIn: "1hr"}*/);
     
     //save user in db
-    await users.insertOne({email,password: encryptedPassword})
+    let insertedUser = await users.insertOne({email,password: encryptedPassword, token })
 
-
+    console.log(insertedUser.insertedId.toString())
     //to create a token
-const token = jsonwebtoken.sign({email},process.env.SECRET/*,{expiresIn: "1hr"}*/);
 
-    await users.updateOne({email: {$eq : email}},{$set : {token}})
-
-     return{sucess:true, messsge: "User created sucessfully", acivationLink: process.env.BASE_URL}      
+    // await users.updateOne({email: {$eq : email}},{$set : {token}})
+    //to send activation link
+     return{sucess:true, messsge: "User created sucessfully", acivationLink: `${baseURL}/api/auth/confirm/${token}/${insertedUser.insertedId.toString()}`};      
     } catch (error) {
         throw error
     }
 }
+
+
+
+
+
+
 // tp get detail of a particular user
 exports.getUser = async (db,id) => {
     try {
@@ -42,6 +52,11 @@ exports.getUser = async (db,id) => {
     }
 }
 
+
+
+
+
+
 //to get details of the users
 exports.getUsers = async () => {
     try {
@@ -51,6 +66,11 @@ exports.getUsers = async () => {
     }
 }
 
+
+
+
+
+
 // to update the user's details
 exports.updateUser = async ()  => {
     try {
@@ -59,6 +79,11 @@ exports.updateUser = async ()  => {
         throw error
     }
 }
+
+
+
+
+
 
 // //to delete the existing user
 exports.deleteUser = async () => {
