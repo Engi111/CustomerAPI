@@ -10,4 +10,14 @@ exports.activation = (req, res, next) => {
     })
 }
 
+exports.login = (req, res, next) => {
+    const { email, password} = req.body
+    const payload = { email,password}
+    authServices.login(req.db,payload)
+    .then (data => {res.json(data)})
+    .catch(error => {
+        console.error(error)
+    })
+}
+
 
