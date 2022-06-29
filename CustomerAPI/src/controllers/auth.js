@@ -20,4 +20,30 @@ exports.login = (req, res, next) => {
     })
 }
 
+exports.logout = (req, res, next) => {
+    const payload = { email,password}
+    authServices.logout(req.db,payload)
+    .then (data => {res.json(data)})
+    .catch(error => {
+        console.error(error)
+    })
+}
 
+exports.changePassword = (req, res, next) => {
+    const { email, password} = req.body
+    const payload = { email,password}
+    authServices.login(req.db,payload)
+    .then (data => {res.json(data)})
+    .catch(error => {
+        console.error(error) 
+    })
+}
+
+exports.linkActivation = (req, res, next) => {
+    
+    authServices.linkActivation(req.db,req.params.token, req.params.userid)
+    .then (data => {res.json(data)})
+    .catch(error => {
+        console.error(error) 
+    })
+}
