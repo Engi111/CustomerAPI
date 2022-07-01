@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const jsonwebtoken = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const ObjectId = require("mongodb").ObjectId;
 
 
 
@@ -33,7 +34,7 @@ exports.createUser = async (db, payload) => {
       token,
       role,
       "created_at": new Date(),
-      "updated_at": new Date(),
+      "updated_at": {lastModified: true}, 
 
     });
 
@@ -66,13 +67,12 @@ exports.getUser = async (db, id) => {
 };
 
 //to get details of the users
-exports.getUsers = async (db, id) => {
-
+exports.getUsers = async (db, id, userid, role) => {
   try {
-    const user = await req.db.collection("users").find({_id: ObjectId(req.params.userId)});
-    return res.status(200).json({sucess: true, data: resposedata, msg: "Get details of user" });
+    const data = await db.collection("users").find().toArray();
+    return {sucess: true, msg: "The Users", data };
   } catch (error) {
-    console.log(err.message);
+    console.log(error);
   }
 };
 
@@ -85,7 +85,7 @@ exports.updateUser = async (req, res, next) => {
     }
   return {sucess:true, data:user, msg:"user updated sucessfully"}
   } catch (error) {
-    console.log(err.message);
+    console.log(error.message);
   }
 };
 
@@ -103,3 +103,29 @@ exports.deleteUser = async (req, res, next) => {
     console.log(err.message);
   }
 };
+
+exports.changePassword = async (db,email, oldPassword, newPassword) => {
+  try {
+    if(!oldPassword || !newPassword ) throw new Error('oldPassword and newPassword are required')
+    
+    const existUser = await db.collection("users").findOne({email});
+    // const existUser = await db.collection("users").findOne({_id: ObjectId(userid_id: ObjectId(userid)});
+        if (!existUser)
+        return res.status(400).send("Given credentials doesn't exist in our database");
+    //comapring pass
+    if(! await bcrypt.compare(oldPassword,existUser.password)) throw new Error('Old password does not match');
+    //new pass cannot be similar with old one
+    if( await bcrypt.compare(newPassword,existUser.password)) throw new Error('New password cannot be old password');
+    //replacing new password
+    const hashPass = await bcrypt.hash(newPassword,10)
+    
+    // await db.collection("users").updateOne({_id: ObjectId(userid)},{$set:{password: hashPass}});
+    await db.collection("users").updateOne({email},{$set:{password: hashPass}});
+    return {
+      success: true,
+      message: "Password change successfully!"
+  }
+  } catch (error) {
+    throw (error); 
+  }
+}

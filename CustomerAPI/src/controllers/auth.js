@@ -21,21 +21,11 @@ exports.login = (req, res, next) => {
 }
 
 exports.logout = (req, res, next) => {
-    const payload = { email,password}
-    authServices.logout(req.db,payload)
+    const {email} = req.user
+    authServices.logout(req.db,email)
     .then (data => {res.json(data)})
     .catch(error => {
         console.error(error)
-    })
-}
-
-exports.changePassword = (req, res, next) => {
-    const { email, password} = req.body
-    const payload = { email,password}
-    authServices.login(req.db,payload)
-    .then (data => {res.json(data)})
-    .catch(error => {
-        console.error(error) 
     })
 }
 

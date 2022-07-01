@@ -1,20 +1,20 @@
 const jwt = require("jsonwebtoken");
-const { TOKEN_KEY } = process.env;
+const { SECRET } = process.env;
+const ObjectId = require("mongodb").ObjectId;
 
-const auth = async(req, res) => {
-    const users = req.db.collection("users");
-    const Token = db.collection("token")
+const auth = async(req, res, next) => {
+    // const users = req.db.collection("users");
+    // const Token = req.db.collection("token")
     const token = req.header("Authorization") && req.header("Authorization").replace("Bearer ", "")
     
     try {
-        if(!token) throw new Error('Token is required')
-         const data = jwt.verify(token, process.env.TOKEN_KEY)
-         const user = await req.db.collection("user").findOne({_id: ObjectId(req.params.userId)});
+        if(!token) {throw new Error('Token is required')}
+        const data = jwt.verify(token, process.env.SECRET)
+        const user = await req.db.collection("users").findOne({email: data.email});
         if (!user) {
             throw new Error()
         }
-        req.user = data  
-        req.token = token
+        req.user = {...data, role:user.role}  
         return next()
     } catch (error) {
         console.log(error)

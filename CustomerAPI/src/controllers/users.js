@@ -21,7 +21,7 @@ exports.getUser = async (req, res, next) => {
 
 //get users detail
 exports.getUsers = async (req, res, next) => {
-    userServices.getUsers(req.body)
+    userServices.getUsers(req.db,req.body)
     .then(data =>{res.json(data)})
     .catch( error => {
         console.error(error)
@@ -40,6 +40,16 @@ exports.updateUser = async (req, res, next) => {
 //delete user
 exports.deleteUser = async (req, res, next) => {
     userServices.deleteUser()
+    .then (data => {res.json(data)})
+    .catch(error => {
+        console.error(error)
+    })
+}
+
+exports.changePassword = async (req, res, next) => {
+    const {oldPassword, newPassword} = req.body;
+    const {email} = req.user;
+    userServices.changePassword(req.db,email,oldPassword,newPassword)   
     .then (data => {res.json(data)})
     .catch(error => {
         console.error(error)
