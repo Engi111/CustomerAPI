@@ -7,10 +7,13 @@ const userRouter = require("./users");
 
 const authRouter = require("./auth");
 
+const adminRouter = require("./admin");
 
-router.use("/auth", authRouter)
+router.use("/auth", authRouter);
 
-router.use("/users", userRouter)
+router.use("/users", userRouter);
+
+router.use("/admin", adminRouter);
 
 router.use("/password-reset", passwordReset);
 
