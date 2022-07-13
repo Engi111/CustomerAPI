@@ -4,7 +4,7 @@ const userServices = require("../services/users")
 
 //create  user
 exports.createUser = async (req, res, next) => {
-    userServices.createUser(req.db,req.body)
+    userServices.createUser(req.db,req.body, req.params.userid)
     .then(data => {res.json(data)})
     .catch( error => {
         console.error(error)
@@ -29,8 +29,8 @@ exports.getUsers = async (req, res, next) => {
 }
 
 //update user
-exports.updateUser = async (req, res, next) => {
-    userServices.updateUser()
+exports.updateUser = (req, res, next) => {
+    userServices.updateUser(req.db,req.body,req.params.userid)
     .then (data => {res.json(data)})
     .catch(error => {
         console.error(error)
@@ -39,7 +39,7 @@ exports.updateUser = async (req, res, next) => {
 
 //delete user
 exports.deleteUser = async (req, res, next) => {
-    userServices.deleteUser()
+     userServices.deleteUser(req.db,req.body,req.params.userid)
     .then (data => {res.json(data)})
     .catch(error => {
         console.error(error)

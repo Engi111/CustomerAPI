@@ -12,7 +12,7 @@ const auth = async(req, res, next) => {
         const data = jwt.verify(token, process.env.SECRET)
         const user = await req.db.collection("users").findOne({email: data.email});
         if (!user) {
-            throw new Error()
+            throw new Error("User not found")
         }
         req.user = {...data, role:user.role}  
         return next()

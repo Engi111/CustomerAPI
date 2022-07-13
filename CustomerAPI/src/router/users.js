@@ -10,7 +10,7 @@ const { changePassword } = require("../controllers/users");
 // const controllers = require("../controllers")
 router.post("/register", createUser);
 
-router.get("/",auth,authorize("admin"),getUsers); //authorization
+router.get("/",auth,authorize("user"),getUsers); //authorization
 
 // router.get("/:id", getUser);
 

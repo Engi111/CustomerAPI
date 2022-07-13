@@ -14,7 +14,7 @@ app.use((req, res, next) => {
   next();
 });
 
-//parsing
+// parsing
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -26,8 +26,8 @@ app.use("/api", indexRouter);
 
 app.use("/", (req, res, next) => {
   res.status(200).json({
-    app: "CustomerAPI",
-    message: "hello world",
+    app: "API",
+    message: "API NOT FOUND",
   });
 });
 

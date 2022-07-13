@@ -67,8 +67,8 @@ router.post("/:userId/:token", async (req,res) => {
         
         // check if token exist for user with userID -> taken from req params 
         const token = await req.db.collection("token").findOne({    
-            userId: ObjectId(req.params.userId),
-            token: req.params.token,
+            // userId: ObjectId(req.params.userId),
+            token: req.params.token
         });
 
         if(!token) return res.status(400).send("Invalid link or expired");
