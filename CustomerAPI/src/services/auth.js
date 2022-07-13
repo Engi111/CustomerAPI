@@ -28,7 +28,7 @@ exports.login = async (db, payload) => {
     // save user in db
     if (oldToken) {
       let updatetedUser = await db
-        .collection("token")
+        .collection("token") 
         .updateOne({ token: oldToken.token }, { $set: { token } });
     } else {
       await db.collection("token").insertOne({ email, token });
